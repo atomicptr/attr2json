@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { extractJson } from "../src/main.ts";
+import extractJson from "../src/main.ts";
 
 const createElem = (elemType: string, attributes: Record<string, string>) => {
     const elem = document.createElement(elemType);
 
     for (const key in attributes) {
-        elem.attributes[key] = attributes[key];
+        elem.setAttribute(key, attributes[key]);
     }
 
     return elem;
@@ -19,7 +19,7 @@ describe("attr2json", () => {
 
         const parsed = extractJson(elem, "attr2json");
 
-        expect("name" in parsed).toBeTruthy();
+        expect("name" in parsed).toBe(true);
         expect(parsed.name).toBe("Hello, World");
     });
 
@@ -151,9 +151,7 @@ describe("attr2json", () => {
             {
                 id: 1,
                 name: "Andi",
-                skills: [
-                    { name: "Programming", value: 10 },
-                ]
+                skills: [{ name: "Programming", value: 10 }],
             },
             {
                 id: 2,
@@ -164,5 +162,36 @@ describe("attr2json", () => {
                 name: "Charles",
             },
         ]);
+    });
+
+    it("can parse complex chartjs example", () => {
+        const elem = createElem("canvas", {
+            chartjs: "",
+            "chartjs:type": "radar",
+            "chartjs:options.scales.r.begin-at-zero": "true",
+            "chartjs:options.scales.r.ticks.display": "false",
+            "chartjs:data.labels[0]": "A",
+            "chartjs:data.labels[1]": "B",
+            "chartjs:data.labels[2]": "C",
+            "chartjs:data.labels[3]": "D",
+            "chartjs:data.datasets[0].label": "2023",
+            "chartjs:data.datasets[0].fill": "false",
+            "chartjs:data.datasets[0].data[0]": "100",
+            "chartjs:data.datasets[0].data[1]": "200",
+            "chartjs:data.datasets[0].data[2]": "300",
+            "chartjs:data.datasets[0].data[3]": "400",
+            "chartjs:data.datasets[1].label": "2024",
+            "chartjs:data.datasets[1].fill": "false",
+            "chartjs:data.datasets[1].data[0]": "500",
+            "chartjs:data.datasets[1].data[1]": "500",
+            "chartjs:data.datasets[1].data[2]": "500",
+            "chartjs:data.datasets[1].data[3]": "500",
+        });
+
+        const parsed = extractJson(elem, "chartjs");
+
+        expect(parsed.type).toBe("radar");
+        expect(Array.isArray(parsed.data["labels"])).toBe(true);
+        expect(Array.isArray(parsed.data["datasets"])).toBe(true);
     });
 });

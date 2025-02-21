@@ -66,17 +66,14 @@ export default function extractJson(elem: HTMLElement, prefix: string): ValueRec
 
     const attributes = [];
 
-    for (const attrName in elem.attributes) {
-        const attrValue =
-            elem.attributes[attrName] instanceof Attr
-                ? elem.attributes[attrName].value
-                : (elem.attributes[attrName] as string);
+    for (const name of elem.getAttributeNames()) {
+        const value = elem.getAttribute(name);
 
-        if (!attrName.startsWith(attrPrefix)) {
+        if (!value || !name.startsWith(attrPrefix)) {
             continue;
         }
 
-        attributes.push([attrName, attrValue]);
+        attributes.push([name, value]);
     }
 
     attributes.sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }));

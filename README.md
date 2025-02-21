@@ -34,7 +34,7 @@ Lets see this example where we'll create a solution to render [chart.js](https:/
 <!-- this is the JS we use to initialize chartjs -->
 <script type="module">
     import { Chart } from "chart.js";
-    import { extractJson } from "attr2json";
+    import extractJson from "attr2json";
 
     // for every element that has the marker we defined here "chartjs"
     document.querySelectorAll("[chartjs]").forEach(elem => {
