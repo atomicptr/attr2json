@@ -59,8 +59,8 @@ const parseValue = (value: string) => {
 export type Value = string | number | boolean | Value[] | ValueRecord;
 export interface ValueRecord extends Record<string, Value> {}
 
-export function extractJson(elem: HTMLElement, prefix: string): ValueRecord {
-    const attrPrefix = `${prefix}:`;
+export default function extractJson(elem: HTMLElement, prefix: string): ValueRecord {
+    const attrPrefix = prefix.endsWith(":") ? prefix : `${prefix}:`;
 
     const res = {};
 
@@ -128,5 +128,3 @@ export function extractJson(elem: HTMLElement, prefix: string): ValueRecord {
 
     return res;
 }
-
-export default extractJson;
